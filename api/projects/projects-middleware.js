@@ -8,11 +8,8 @@ const checkProjectPayload=(req,res,next)=>{
         if(typeof(description)!=="string"|| description.length === 0){
             return res.status(400).json({message:"description is missing"});
         }
-        if(completed!==undefined&&typeof(completed)!=="boolean"){
+        if(typeof(completed)!=="boolean"){
             return res.status(400).json({message:"completed must be a boolean"});
-        }
-        else if(completed === undefined){
-            req.body.completed = false;
         }
         next();
     }
@@ -20,7 +17,7 @@ const checkProjectPayload=(req,res,next)=>{
         next(err);
     }
 };
-const projectIdMustExist = (req,res,next) => {
+const projectIdMustExist = async(req,res,next) => {
     try{
         const project = await projects.get(req.params.id);
         if(!project){

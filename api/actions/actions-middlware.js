@@ -1,5 +1,5 @@
-const projects = require("../projects/projects-model");
-const actions = require("./actions-model");
+const projectsModel = require("../projects/projects-model");
+const actionsModel = require("./actions-model");
 const checkActionsPayload=async(req,res,next)=>{
     try{
         const {project_id,description,notes,completed} = req.body;
@@ -15,7 +15,7 @@ const checkActionsPayload=async(req,res,next)=>{
         if(typeof(project_id)!=="number"){
             return res.status(400).json({message:"project_id must be a number"});
         }
-        const project = await projects.get(project_id);
+        const project = await projectsModel.get(project_id);
         if(project===undefined){
             return res.status(400).json({message:"project_id does not exist"});
         }
@@ -28,14 +28,15 @@ const checkActionsPayload=async(req,res,next)=>{
         if(typeof(req.body.completed)!=="boolean"){
             return res.status(400).json({message:"completed must be a boolean"});
         }
+        next()
     }
     catch(err){
         next(err);
     }
 };
-const idMustExist=async(req,res,next)=>{
+const actionIdMustExist=async(req,res,next)=>{
     try{
-        const action = await db.get(req.params.id);
+        const action = await actionsModel.get(req.params.id);
         if(!action){
             return res.status(404).json({message:`action with ${req.params.id} does not exist`});
         }
@@ -61,5 +62,5 @@ const idMustExist=async(req,res,next)=>{
 // };
 module.exports = {
     checkActionsPayload,
-    idMustExist
+    actionIdMustExist
 }

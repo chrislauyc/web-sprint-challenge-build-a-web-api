@@ -22,7 +22,7 @@ const {projectIdMustExist,checkProjectPayload} = require("./projects-middleware"
     Returns an array of actions (could be empty) belonging to a project with the given id.
     If there is no project with the given id it responds with a status code 404.
 */
-router.get("/",(req,res,next)=>{
+router.get("/",async(req,res,next)=>{
     try{
         const projects = await projectsModel.get();
         res.status(200).json(projects);

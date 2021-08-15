@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const db = require("./actions-model");
-const { checkActionsPayload, idMustExist} = require("./actions-middlware");
+const { checkActionsPayload, actionIdMustExist} = require("./actions-middlware");
 /**
 [GET] /api/actions
     Returns an array of actions (or an empty array) as the body of the response.
@@ -29,7 +29,7 @@ router.get("/",async(req,res,next)=>{
         next(err);
     }
 });
-router.get("/:id",idMustExist,async(req,res,next)=>{
+router.get("/:id",actionIdMustExist,async(req,res,next)=>{
     try{
         res.status(200).json(req.action);
     }
@@ -39,16 +39,16 @@ router.get("/:id",idMustExist,async(req,res,next)=>{
 });
 router.post("/",checkActionsPayload,async(req,res,next)=>{
     try{
-        const newAction = db.insert(req.body);
+        const newAction = await db.insert(req.body);
         res.status(201).json(newAction);
     }
     catch(err){
         next(err);
     }
 })
-router.put("/:id",checkActionsPayload,idMustExist,async(req,res,next)=>{
+router.put("/:id",checkActionsPayload,actionIdMustExist,async(req,res,next)=>{
     try{
-        const updatedAction = db.update(req.params.id,req.body);
+        const updatedAction = await db.update(req.params.id,req.body);
         if(!updatedAction){
             return next(new Error(`cannot update action with id ${req.params.id}`));
         }
@@ -60,9 +60,9 @@ router.put("/:id",checkActionsPayload,idMustExist,async(req,res,next)=>{
         next(err);
     }
 })
-router.delete("/:id",idMustExist,async(req,res,next)=>{
+router.delete("/:id",actionIdMustExist,async(req,res,next)=>{
     try{
-        const counts = db.remove(req.params.id);
+        const counts = await db.remove(req.params.id);
         if(counts === 0){
             return next(new Error(`cannot delete action with id ${req.params.id}`));
         }
