@@ -21,6 +21,12 @@ module.exports = {
       filename: "./data/lambda.db3",
     },
   },
+  production:{
+    ...commonConfig,
+    connection:{
+      filename: "./data/projectAction.db3"
+    }
+  },
   testing: {
     ...commonConfig,
     connection: {
