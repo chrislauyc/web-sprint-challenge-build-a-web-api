@@ -14,7 +14,8 @@ server.use("/api/projects",projects);
 // err handling
 server.use((err,req,res,next)=>{
     // res.status(500).json({message:err.toString(),req})
-    res.status(500).json({message:err.message,req});
+    console.log(err);
+    res.status(500).json({message:"this is an internal server error"});
 });
 server.get("/",(req,res)=>res.status(200).json({message:"server is running"}));
 module.exports = server;
